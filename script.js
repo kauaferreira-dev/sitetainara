@@ -1,21 +1,23 @@
 // ========================================
-// INICIALIZAR AOS (Animações on Scroll) - OTIMIZADO
+// INICIALIZAR AOS ULTRA SMOOTH 120FPS
 // ========================================
 AOS.init({
-  duration: 800,
+  duration: 600,
   once: true,
-  offset: 100,
-  easing: "ease-out-cubic",
+  offset: 50,
+  easing: "ease-out-quad",
   disable: false,
   startEvent: "DOMContentLoaded",
   useClassNames: false,
   disableMutationObserver: false,
-  debounceDelay: 50,
-  throttleDelay: 99,
+  debounceDelay: 0,
+  throttleDelay: 16,
+  anchorPlacement: "top-bottom",
+  mirror: false,
 });
 
 // ========================================
-// OTIMIZADOR DE SCROLL GLOBAL (60-120FPS)
+// OTIMIZADOR DE SCROLL 120FPS
 // ========================================
 let ticking = false;
 let lastScrollY = 0;
@@ -29,7 +31,8 @@ window.addEventListener("resize", () => {
 function optimizedScroll() {
   const now = performance.now();
 
-  if (now - lastScrollTime < 16) {
+  // 120FPS = 8.33ms por frame
+  if (now - lastScrollTime < 8.33) {
     return;
   }
 
@@ -41,6 +44,7 @@ function optimizedScroll() {
   if (navbar) {
     if (lastScrollY > 50) {
       navbar.classList.add("scrolled");
+      navbar.style.transform = "translate3d(0, 0, 0)";
     } else {
       navbar.classList.remove("scrolled");
     }
@@ -50,7 +54,9 @@ function optimizedScroll() {
   if (!isMobile) {
     const heroBg = document.getElementById("heroBg");
     if (heroBg && lastScrollY < window.innerHeight) {
-      heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
+      requestAnimationFrame(() => {
+        heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
+      });
     }
   }
 
@@ -79,7 +85,7 @@ window.addEventListener(
 );
 
 // ========================================
-// MENU MOBILE (HAMBÚRGUER) - ADICIONA ISSO!
+// MENU MOBILE (HAMBÚRGUER)
 // ========================================
 const menuToggle = document.querySelector(".menu-toggle");
 const navbarMenu = document.querySelector(".navbar-menu");
@@ -345,21 +351,41 @@ if (dataInput) {
 }
 
 // ========================================
-// LAZY LOADING PARA IMAGENS
+// LAZY LOADING ULTRA SMOOTH
 // ========================================
 if ("IntersectionObserver" in window) {
-  const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        if (img.dataset.src) {
-          img.src = img.dataset.src;
+  const imageObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+
+          // Carrega com fade suave
+          img.style.opacity = "0";
+          img.style.transition = "opacity 0.4s ease-out";
+
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+          }
+
+          // Fade in após carregar
+          img.onload = () => {
+            requestAnimationFrame(() => {
+              img.style.opacity = "1";
+            });
+          };
+
+          img.classList.remove("lazy");
+          observer.unobserve(img);
         }
-        img.classList.remove("lazy");
-        observer.unobserve(img);
-      }
-    });
-  });
+      });
+    },
+    {
+      root: null,
+      rootMargin: "50px",
+      threshold: 0.01,
+    }
+  );
 
   const lazyImages = document.querySelectorAll('img[loading="lazy"]');
   lazyImages.forEach((img) => imageObserver.observe(img));
