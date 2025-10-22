@@ -22,6 +22,7 @@ let lastScrollY = 0;
 let lastScrollTime = 0;
 let isMobile = window.innerWidth <= 768;
 
+// Detecta redimensionamento
 window.addEventListener("resize", () => {
   isMobile = window.innerWidth <= 768;
 });
@@ -29,6 +30,7 @@ window.addEventListener("resize", () => {
 function optimizedScroll() {
   const now = performance.now();
 
+  // Throttle para 60fps (16.67ms por frame)
   if (now - lastScrollTime < 16) {
     return;
   }
@@ -50,6 +52,7 @@ function optimizedScroll() {
   if (!isMobile) {
     const heroBg = document.getElementById("heroBg");
     if (heroBg && lastScrollY < window.innerHeight) {
+      // Usa transform3d para aceleração de GPU
       heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
     }
   }
@@ -67,6 +70,7 @@ function optimizedScroll() {
   ticking = false;
 }
 
+// Event Listener com RequestAnimationFrame para 60-120fps
 window.addEventListener(
   "scroll",
   () => {
@@ -79,34 +83,7 @@ window.addEventListener(
 );
 
 // ========================================
-// MENU MOBILE (HAMBÚRGUER)
-// ========================================
-const menuToggle = document.querySelector('.menu-toggle');
-const navbarMenu = document.querySelector('.navbar-menu');
-
-if (menuToggle && navbarMenu) {
-  menuToggle.addEventListener('click', () => {
-    navbarMenu.classList.toggle('active');
-    menuToggle.classList.toggle('active');
-  });
-
-  document.querySelectorAll('.navbar-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-      navbarMenu.classList.remove('active');
-      menuToggle.classList.remove('active');
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!menuToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
-      navbarMenu.classList.remove('active');
-      menuToggle.classList.remove('active');
-    }
-  });
-}
-
-// ========================================
-// BOTÃO VOLTAR AO TOPO
+// BOTÃO VOLTAR AO TOPO (SMOOTH)
 // ========================================
 const scrollTopBtn = document.getElementById("scrollTop");
 if (scrollTopBtn) {
@@ -119,110 +96,67 @@ if (scrollTopBtn) {
 }
 
 // ========================================
-// PARTICLES.JS ULTRA PREMIUM 💎
+// PARTICLES.JS (OTIMIZADO PARA PERFORMANCE)
 // ========================================
 particlesJS("particles-js", {
   particles: {
     number: {
-      value: isMobile ? 35 : 55,
-      density: { enable: true, value_area: 1200 },
+      value: isMobile ? 40 : 60, // Menos partículas no mobile
+      density: { enable: true, value_area: 1000 },
     },
-    color: { 
-      value: ["#E5A5B4", "#D4AF37", "#F2C6D3", "#C67B8F"]
-    },
-    shape: { 
-      type: ["circle", "edge"],
-      stroke: {
-        width: 0,
-        color: "#E5A5B4"
-      }
-    },
+    color: { value: "#E5A5B4" }, // Rose Gold atualizado
+    shape: { type: "circle" },
     opacity: {
-      value: 0.45,
+      value: 0.3,
       random: true,
       anim: {
-        enable: true,
-        speed: 0.6,
-        opacity_min: 0.15,
-        sync: false
-      }
+        enable: false, // Desabilita animação de opacidade para performance
+      },
     },
     size: {
-      value: 4.5,
+      value: 3,
       random: true,
       anim: {
-        enable: true,
-        speed: 2.5,
-        size_min: 1.5,
-        sync: false
-      }
+        enable: false, // Desabilita animação de tamanho
+      },
     },
     line_linked: {
       enable: true,
-      distance: 190,
+      distance: 150,
       color: "#E5A5B4",
-      opacity: 0.4,
-      width: 1.8,
-      shadow: {
-        enable: true,
-        color: "#E5A5B4",
-        blur: 6
-      }
+      opacity: 0.2,
+      width: 1,
     },
     move: {
       enable: true,
-      speed: isMobile ? 0.9 : 1.3,
+      speed: isMobile ? 1 : 1.5, // Mais lento no mobile
       direction: "none",
-      random: true,
+      random: false,
       straight: false,
       out_mode: "out",
       bounce: false,
-      attract: {
-        enable: true,
-        rotateX: 650,
-        rotateY: 1300
-      }
     },
   },
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { 
-        enable: !isMobile, 
-        mode: ["grab", "bubble"]
-      },
-      onclick: { 
-        enable: true, 
-        mode: "repulse"
-      },
+      onhover: { enable: !isMobile, mode: "grab" }, // Desabilita hover no mobile
+      onclick: { enable: true, mode: "push" },
       resize: true,
     },
     modes: {
       grab: {
-        distance: 220,
-        line_linked: { 
-          opacity: 0.85
-        },
+        distance: 140,
+        line_linked: { opacity: 0.5 },
       },
-      bubble: {
-        distance: 220,
-        size: 9,
-        duration: 2.5,
-        opacity: 0.9,
-        speed: 3
-      },
-      repulse: {
-        distance: 180,
-        duration: 0.5
-      },
-      push: { particles_nb: 4 },
+      push: { particles_nb: 3 },
     },
   },
   retina_detect: true,
 });
 
 // ========================================
-// DEPOIMENTOS ROTATIVOS
+// DEPOIMENTOS ROTATIVOS (OTIMIZADO)
 // ========================================
 const testimonials = [
   {
@@ -296,6 +230,7 @@ if (bookingForm) {
       mensagem ? `\n*Observações:* ${mensagem}` : ""
     }`;
 
+    // ⚠️ MUDE O NÚMERO DO WHATSAPP AQUI! ⚠️
     const whatsappLink = `https://wa.me/5511999999999?text=${encodeURIComponent(
       texto
     )}`;
@@ -317,7 +252,7 @@ if (bookingForm) {
 }
 
 // ========================================
-// SCROLL SUAVE PARA ÂNCORAS
+// SCROLL SUAVE PARA ÂNCORAS (OTIMIZADO)
 // ========================================
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
@@ -343,7 +278,7 @@ if (dataInput) {
 }
 
 // ========================================
-// LAZY LOADING PARA IMAGENS
+// PERFORMANCE: LAZY LOADING PARA IMAGENS
 // ========================================
 if ("IntersectionObserver" in window) {
   const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -364,9 +299,10 @@ if ("IntersectionObserver" in window) {
 }
 
 // ========================================
-// HARDWARE ACCELERATION
+// PREVENÇÃO DE SCROLL JANK
 // ========================================
 document.addEventListener("DOMContentLoaded", () => {
+  // Force hardware acceleration em elementos animados (só desktop)
   if (!isMobile) {
     const animatedElements = document.querySelectorAll(
       ".service-card, .gallery-item, .cta-button"
