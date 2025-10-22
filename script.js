@@ -386,3 +386,133 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+// ========================================
+// PARTICLES.JS (MAIS FORTE - SÓ OS TRAÇOS)
+// ========================================
+particlesJS("particles-js", {
+  particles: {
+    number: {
+      value: isMobile ? 50 : 100, // MUITO MAIS partículas
+      density: { enable: true, value_area: 800 },
+    },
+    color: {
+      value: ["#E5A5B4", "#F2C6D3", "#C67B8F"], // SÓ ROSA
+    },
+    shape: {
+      type: "circle",
+      stroke: {
+        width: 0,
+        color: "#E5A5B4",
+      },
+    },
+    opacity: {
+      value: 0.6, // Mais visível
+      random: true,
+      anim: {
+        enable: true,
+        speed: 0.8,
+        opacity_min: 0.2,
+        sync: false,
+      },
+    },
+    size: {
+      value: 5, // Maior
+      random: true,
+      anim: {
+        enable: true,
+        speed: 3,
+        size_min: 2,
+        sync: false,
+      },
+    },
+    line_linked: {
+      enable: true,
+      distance: 150, // Linhas mais próximas
+      color: "#E5A5B4", // ROSA
+      opacity: 0.6, // Mais visível
+      width: 2.5, // LINHAS MAIS GROSSAS
+      shadow: {
+        enable: true,
+        color: "#E5A5B4",
+        blur: 10,
+      },
+    },
+    move: {
+      enable: true,
+      speed: isMobile ? 1.2 : 1.8, // Mais rápido
+      direction: "none",
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false,
+      attract: {
+        enable: true,
+        rotateX: 800,
+        rotateY: 1500,
+      },
+    },
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: {
+        enable: !isMobile,
+        mode: ["grab", "bubble"],
+      },
+      onclick: {
+        enable: true,
+        mode: "push",
+      },
+      resize: true,
+    },
+    modes: {
+      grab: {
+        distance: 250, // Puxa mais longe
+        line_linked: {
+          opacity: 1, // Linha TOTAL visível
+        },
+      },
+      bubble: {
+        distance: 250,
+        size: 12, // BOLHA GRANDE
+        duration: 2,
+        opacity: 1,
+        speed: 3,
+      },
+      push: {
+        particles_nb: 6, // Adiciona mais partículas ao clicar
+      },
+    },
+  },
+  retina_detect: true,
+});
+
+// ========================================
+// RASTRO DO CURSOR - SÓ ROSA
+// ========================================
+const cursorTrail = [];
+const trailLength = isMobile ? 0 : 25;
+
+if (!isMobile) {
+  document.addEventListener("mousemove", (e) => {
+    const trail = document.createElement("div");
+    trail.className = "cursor-trail";
+    trail.style.left = e.clientX + "px";
+    trail.style.top = e.clientY + "px";
+    document.body.appendChild(trail);
+
+    cursorTrail.push(trail);
+    if (cursorTrail.length > trailLength) {
+      const oldTrail = cursorTrail.shift();
+      if (oldTrail && oldTrail.parentNode) {
+        oldTrail.remove();
+      }
+    }
+
+    setTimeout(() => {
+      if (trail && trail.parentNode) {
+        trail.remove();
+      }
+    }, 1000);
+  });
+}
