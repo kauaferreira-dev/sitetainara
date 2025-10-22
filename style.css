@@ -957,6 +957,12 @@ footer {
   filter: drop-shadow(0 0 10px rgba(229, 165, 180, 0.5));
 }
 
+/* AUMENTA SÓ WHATSAPP */
+.social-icons a img[alt="WhatsApp"] {
+  width: 55px !important;
+  height: 55px !important;
+}
+
 .footer-text {
   color: rgba(245, 243, 240, 0.95);
   font-size: 1.3rem;
