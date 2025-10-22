@@ -168,11 +168,11 @@ const testimonials = [
     author: "Ana Paula ⭐⭐⭐⭐⭐",
   },
   {
-    text: "Profissionalismo e carinho em cada detalhe. O Studio Tainara Sousa é meu lugar favorito!",
+    text: "Profissionalismo e carinho em cada detalhe. O Ts Stilo é meu lugar favorito!",
     author: "Juliana Costa ⭐⭐⭐⭐⭐",
   },
   {
-    text: "Amo demais! As unhas ficam perfeitas e o atendimento é sensacional. Indico sempre!",
+    text: "Amo demais! O cabelo fica perfeito e as unhas são impecáveis. Indico sempre!",
     author: "Camila Santos ⭐⭐⭐⭐⭐",
   },
 ];
@@ -216,9 +216,12 @@ if (bookingForm) {
     const mensagem = document.getElementById("mensagem").value;
 
     const servicoNomes = {
-      unhas: "Unhas em Gel",
+      unhas_gel: "Unhas em Gel",
       alongamento: "Alongamento Premium",
-      nailart: "Nail Art Exclusiva",
+      nail_designer: "Nail Designer",
+      manicure: "Manicure & Pedicure",
+      cabelo: "Hair Designer",
+      sobrancelha: "Design de Sobrancelhas",
     };
 
     const texto = `Olá! Gostaria de agendar um horário 💖\n\n*Nome:* ${nome}\n*Serviço:* ${
