@@ -5,9 +5,9 @@ AOS.init({
   duration: 800,
   once: true,
   offset: 100,
-  easing: 'ease-out-cubic',
+  easing: "ease-out-cubic",
   disable: false,
-  startEvent: 'DOMContentLoaded',
+  startEvent: "DOMContentLoaded",
   useClassNames: false,
   disableMutationObserver: false,
   debounceDelay: 50,
@@ -20,15 +20,21 @@ AOS.init({
 let ticking = false;
 let lastScrollY = 0;
 let lastScrollTime = 0;
+let isMobile = window.innerWidth <= 768;
+
+// Detecta redimensionamento
+window.addEventListener("resize", () => {
+  isMobile = window.innerWidth <= 768;
+});
 
 function optimizedScroll() {
   const now = performance.now();
-  
+
   // Throttle para 60fps (16.67ms por frame)
   if (now - lastScrollTime < 16) {
     return;
   }
-  
+
   lastScrollY = window.pageYOffset;
   lastScrollTime = now;
 
@@ -42,11 +48,13 @@ function optimizedScroll() {
     }
   }
 
-  // PARALLAX NO HERO (só executa se estiver visível)
-  const heroBg = document.getElementById("heroBg");
-  if (heroBg && lastScrollY < window.innerHeight) {
-    // Usa transform3d para aceleração de GPU
-    heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
+  // PARALLAX NO HERO (DESABILITADO NO MOBILE)
+  if (!isMobile) {
+    const heroBg = document.getElementById("heroBg");
+    if (heroBg && lastScrollY < window.innerHeight) {
+      // Usa transform3d para aceleração de GPU
+      heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
+    }
   }
 
   // BOTÃO VOLTAR AO TOPO
@@ -63,12 +71,16 @@ function optimizedScroll() {
 }
 
 // Event Listener com RequestAnimationFrame para 60-120fps
-window.addEventListener('scroll', () => {
-  if (!ticking) {
-    window.requestAnimationFrame(optimizedScroll);
-    ticking = true;
-  }
-}, { passive: true });
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!ticking) {
+      window.requestAnimationFrame(optimizedScroll);
+      ticking = true;
+    }
+  },
+  { passive: true }
+);
 
 // ========================================
 // BOTÃO VOLTAR AO TOPO (SMOOTH)
@@ -76,9 +88,9 @@ window.addEventListener('scroll', () => {
 const scrollTopBtn = document.getElementById("scrollTop");
 if (scrollTopBtn) {
   scrollTopBtn.addEventListener("click", () => {
-    window.scrollTo({ 
-      top: 0, 
-      behavior: "smooth" 
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
   });
 }
@@ -89,24 +101,24 @@ if (scrollTopBtn) {
 particlesJS("particles-js", {
   particles: {
     number: {
-      value: 60, // Reduzido de 80 para melhor performance
+      value: isMobile ? 40 : 60, // Menos partículas no mobile
       density: { enable: true, value_area: 1000 },
     },
     color: { value: "#E5A5B4" }, // Rose Gold atualizado
     shape: { type: "circle" },
-    opacity: { 
-      value: 0.3, 
+    opacity: {
+      value: 0.3,
       random: true,
       anim: {
-        enable: false // Desabilita animação de opacidade para performance
-      }
+        enable: false, // Desabilita animação de opacidade para performance
+      },
     },
-    size: { 
-      value: 3, 
+    size: {
+      value: 3,
       random: true,
       anim: {
-        enable: false // Desabilita animação de tamanho
-      }
+        enable: false, // Desabilita animação de tamanho
+      },
     },
     line_linked: {
       enable: true,
@@ -117,7 +129,7 @@ particlesJS("particles-js", {
     },
     move: {
       enable: true,
-      speed: 1.5, // Reduzido para melhor performance
+      speed: isMobile ? 1 : 1.5, // Mais lento no mobile
       direction: "none",
       random: false,
       straight: false,
@@ -128,7 +140,7 @@ particlesJS("particles-js", {
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: true, mode: "grab" },
+      onhover: { enable: !isMobile, mode: "grab" }, // Desabilita hover no mobile
       onclick: { enable: true, mode: "push" },
       resize: true,
     },
@@ -137,7 +149,7 @@ particlesJS("particles-js", {
         distance: 140,
         line_linked: { opacity: 0.5 },
       },
-      push: { particles_nb: 3 }, // Reduzido de 4
+      push: { particles_nb: 3 },
     },
   },
   retina_detect: true,
@@ -170,8 +182,7 @@ let currentTestimonial = 0;
 function updateTestimonial() {
   const testimonialEl = document.getElementById("testimonial");
   if (!testimonialEl) return;
-  
-  // Usa transição CSS em vez de setTimeout para melhor performance
+
   testimonialEl.style.opacity = "0";
   testimonialEl.style.transition = "opacity 0.5s ease";
 
@@ -181,14 +192,12 @@ function updateTestimonial() {
       <p>${testimonials[currentTestimonial].text}</p>
       <div class="testimonial-author">- ${testimonials[currentTestimonial].author}</div>
     `;
-    
-    // Force reflow para garantir transição suave
+
     void testimonialEl.offsetWidth;
     testimonialEl.style.opacity = "1";
   }, 500);
 }
 
-// Trocar depoimento a cada 6 segundos
 setInterval(updateTestimonial, 6000);
 
 // ========================================
@@ -219,20 +228,23 @@ if (bookingForm) {
     }`;
 
     // ⚠️ MUDE O NÚMERO DO WHATSAPP AQUI! ⚠️
-    const whatsappLink = `https://wa.me/5511999999999?text=${encodeURIComponent(texto)}`;
+    const whatsappLink = `https://wa.me/5511999999999?text=${encodeURIComponent(
+      texto
+    )}`;
 
     window.open(whatsappLink, "_blank");
-    
-    // Feedback visual melhor
-    const submitBtn = bookingForm.querySelector('.submit-button');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Abrindo WhatsApp...";
-    submitBtn.style.background = "linear-gradient(135deg, #2ecc71, #27ae60)";
-    
-    setTimeout(() => {
-      submitBtn.textContent = originalText;
-      submitBtn.style.background = "";
-    }, 2000);
+
+    const submitBtn = bookingForm.querySelector(".submit-button");
+    if (submitBtn) {
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "Abrindo WhatsApp...";
+      submitBtn.style.background = "linear-gradient(135deg, #2ecc71, #27ae60)";
+
+      setTimeout(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.style.background = "";
+      }, 2000);
+    }
   });
 }
 
@@ -244,11 +256,10 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     e.preventDefault();
     const target = document.querySelector(this.getAttribute("href"));
     if (target) {
-      // Scroll suave nativo otimizado
-      target.scrollIntoView({ 
-        behavior: "smooth", 
+      target.scrollIntoView({
+        behavior: "smooth",
         block: "start",
-        inline: "nearest" 
+        inline: "nearest",
       });
     }
   });
@@ -266,48 +277,35 @@ if (dataInput) {
 // ========================================
 // PERFORMANCE: LAZY LOADING PARA IMAGENS
 // ========================================
-if ('IntersectionObserver' in window) {
+if ("IntersectionObserver" in window) {
   const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const img = entry.target;
-        img.src = img.dataset.src || img.src;
-        img.classList.remove('lazy');
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+        }
+        img.classList.remove("lazy");
         observer.unobserve(img);
       }
     });
   });
 
   const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-  lazyImages.forEach(img => imageObserver.observe(img));
+  lazyImages.forEach((img) => imageObserver.observe(img));
 }
 
 // ========================================
 // PREVENÇÃO DE SCROLL JANK
 // ========================================
-document.addEventListener('DOMContentLoaded', () => {
-  // Force hardware acceleration em elementos animados
-  const animatedElements = document.querySelectorAll('.service-card, .gallery-item, .cta-button');
-  animatedElements.forEach(el => {
-    el.style.willChange = 'transform';
-  });
-});
-
-// ========================================
-// DEBUG: MONITOR DE FPS (REMOVER EM PRODUÇÃO)
-// ========================================
-/*
-let lastTime = performance.now();
-let frames = 0;
-function measureFPS() {
-  const now = performance.now();
-  frames++;
-  if (now >= lastTime + 1000) {
-    console.log(`FPS: ${Math.round((frames * 1000) / (now - lastTime))}`);
-    frames = 0;
-    lastTime = now;
+document.addEventListener("DOMContentLoaded", () => {
+  // Force hardware acceleration em elementos animados (só desktop)
+  if (!isMobile) {
+    const animatedElements = document.querySelectorAll(
+      ".service-card, .gallery-item, .cta-button"
+    );
+    animatedElements.forEach((el) => {
+      el.style.willChange = "transform";
+    });
   }
-  requestAnimationFrame(measureFPS);
-}
-requestAnimationFrame(measureFPS);
-*/
+});
