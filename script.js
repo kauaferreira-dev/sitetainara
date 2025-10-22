@@ -52,7 +52,6 @@ function optimizedScroll() {
   if (!isMobile) {
     const heroBg = document.getElementById("heroBg");
     if (heroBg && lastScrollY < window.innerHeight) {
-      // Usa transform3d para aceleração de GPU
       heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
     }
   }
@@ -83,6 +82,35 @@ window.addEventListener(
 );
 
 // ========================================
+// MENU MOBILE (HAMBÚRGUER) - NOVO!
+// ========================================
+const menuToggle = document.querySelector('.menu-toggle');
+const navbarMenu = document.querySelector('.navbar-menu');
+
+if (menuToggle && navbarMenu) {
+  menuToggle.addEventListener('click', () => {
+    navbarMenu.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+  });
+
+  // Fecha o menu ao clicar em um link
+  document.querySelectorAll('.navbar-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      navbarMenu.classList.remove('active');
+      menuToggle.classList.remove('active');
+    });
+  });
+
+  // Fecha o menu ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!menuToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+      navbarMenu.classList.remove('active');
+      menuToggle.classList.remove('active');
+    }
+  });
+}
+
+// ========================================
 // BOTÃO VOLTAR AO TOPO (SMOOTH)
 // ========================================
 const scrollTopBtn = document.getElementById("scrollTop");
@@ -101,23 +129,23 @@ if (scrollTopBtn) {
 particlesJS("particles-js", {
   particles: {
     number: {
-      value: isMobile ? 40 : 60, // Menos partículas no mobile
+      value: isMobile ? 40 : 60,
       density: { enable: true, value_area: 1000 },
     },
-    color: { value: "#E5A5B4" }, // Rose Gold atualizado
+    color: { value: "#E5A5B4" },
     shape: { type: "circle" },
     opacity: {
       value: 0.3,
       random: true,
       anim: {
-        enable: false, // Desabilita animação de opacidade para performance
+        enable: false,
       },
     },
     size: {
       value: 3,
       random: true,
       anim: {
-        enable: false, // Desabilita animação de tamanho
+        enable: false,
       },
     },
     line_linked: {
@@ -129,7 +157,7 @@ particlesJS("particles-js", {
     },
     move: {
       enable: true,
-      speed: isMobile ? 1 : 1.5, // Mais lento no mobile
+      speed: isMobile ? 1 : 1.5,
       direction: "none",
       random: false,
       straight: false,
@@ -140,7 +168,7 @@ particlesJS("particles-js", {
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: !isMobile, mode: "grab" }, // Desabilita hover no mobile
+      onhover: { enable: !isMobile, mode: "grab" },
       onclick: { enable: true, mode: "push" },
       resize: true,
     },
@@ -302,7 +330,6 @@ if ("IntersectionObserver" in window) {
 // PREVENÇÃO DE SCROLL JANK
 // ========================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Force hardware acceleration em elementos animados (só desktop)
   if (!isMobile) {
     const animatedElements = document.querySelectorAll(
       ".service-card, .gallery-item, .cta-button"
