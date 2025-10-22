@@ -351,45 +351,27 @@ if (dataInput) {
 }
 
 // ========================================
-// LAZY LOADING ULTRA SMOOTH
+// FIX IMAGENS DA GALERIA (SEM LAZY LOADING)
 // ========================================
-if ("IntersectionObserver" in window) {
-  const imageObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
+document.addEventListener("DOMContentLoaded", () => {
+  // REMOVE lazy loading e força visibilidade
+  const fixGalleryImages = () => {
+    document.querySelectorAll(".gallery-item img").forEach((img) => {
+      img.style.opacity = "1";
+      img.style.visibility = "visible";
+      img.removeAttribute("loading"); // Remove lazy
+    });
+  };
 
-          // Carrega com fade suave
-          img.style.opacity = "0";
-          img.style.transition = "opacity 0.4s ease-out";
+  // Executa imediatamente
+  fixGalleryImages();
 
-          if (img.dataset.src) {
-            img.src = img.dataset.src;
-          }
+  // Executa depois de 100ms
+  setTimeout(fixGalleryImages, 100);
 
-          // Fade in após carregar
-          img.onload = () => {
-            requestAnimationFrame(() => {
-              img.style.opacity = "1";
-            });
-          };
-
-          img.classList.remove("lazy");
-          observer.unobserve(img);
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: "50px",
-      threshold: 0.01,
-    }
-  );
-
-  const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-  lazyImages.forEach((img) => imageObserver.observe(img));
-}
+  // Executa depois de 500ms (garantia)
+  setTimeout(fixGalleryImages, 500);
+});
 
 // ========================================
 // HARDWARE ACCELERATION
