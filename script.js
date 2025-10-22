@@ -22,7 +22,6 @@ let lastScrollY = 0;
 let lastScrollTime = 0;
 let isMobile = window.innerWidth <= 768;
 
-// Detecta redimensionamento
 window.addEventListener("resize", () => {
   isMobile = window.innerWidth <= 768;
 });
@@ -30,7 +29,6 @@ window.addEventListener("resize", () => {
 function optimizedScroll() {
   const now = performance.now();
 
-  // Throttle para 60fps (16.67ms por frame)
   if (now - lastScrollTime < 16) {
     return;
   }
@@ -69,7 +67,6 @@ function optimizedScroll() {
   ticking = false;
 }
 
-// Event Listener com RequestAnimationFrame para 60-120fps
 window.addEventListener(
   "scroll",
   () => {
@@ -82,7 +79,7 @@ window.addEventListener(
 );
 
 // ========================================
-// MENU MOBILE (HAMBÚRGUER) - NOVO!
+// MENU MOBILE (HAMBÚRGUER)
 // ========================================
 const menuToggle = document.querySelector('.menu-toggle');
 const navbarMenu = document.querySelector('.navbar-menu');
@@ -93,7 +90,6 @@ if (menuToggle && navbarMenu) {
     menuToggle.classList.toggle('active');
   });
 
-  // Fecha o menu ao clicar em um link
   document.querySelectorAll('.navbar-menu a').forEach(link => {
     link.addEventListener('click', () => {
       navbarMenu.classList.remove('active');
@@ -101,7 +97,6 @@ if (menuToggle && navbarMenu) {
     });
   });
 
-  // Fecha o menu ao clicar fora
   document.addEventListener('click', (e) => {
     if (!menuToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
       navbarMenu.classList.remove('active');
@@ -111,7 +106,7 @@ if (menuToggle && navbarMenu) {
 }
 
 // ========================================
-// BOTÃO VOLTAR AO TOPO (SMOOTH)
+// BOTÃO VOLTAR AO TOPO
 // ========================================
 const scrollTopBtn = document.getElementById("scrollTop");
 if (scrollTopBtn) {
@@ -124,67 +119,110 @@ if (scrollTopBtn) {
 }
 
 // ========================================
-// PARTICLES.JS (OTIMIZADO PARA PERFORMANCE)
+// PARTICLES.JS ULTRA PREMIUM 💎
 // ========================================
 particlesJS("particles-js", {
   particles: {
     number: {
-      value: isMobile ? 40 : 60,
-      density: { enable: true, value_area: 1000 },
+      value: isMobile ? 35 : 55,
+      density: { enable: true, value_area: 1200 },
     },
-    color: { value: "#E5A5B4" },
-    shape: { type: "circle" },
+    color: { 
+      value: ["#E5A5B4", "#D4AF37", "#F2C6D3", "#C67B8F"]
+    },
+    shape: { 
+      type: ["circle", "edge"],
+      stroke: {
+        width: 0,
+        color: "#E5A5B4"
+      }
+    },
     opacity: {
-      value: 0.3,
+      value: 0.45,
       random: true,
       anim: {
-        enable: false,
-      },
+        enable: true,
+        speed: 0.6,
+        opacity_min: 0.15,
+        sync: false
+      }
     },
     size: {
-      value: 3,
+      value: 4.5,
       random: true,
       anim: {
-        enable: false,
-      },
+        enable: true,
+        speed: 2.5,
+        size_min: 1.5,
+        sync: false
+      }
     },
     line_linked: {
       enable: true,
-      distance: 150,
+      distance: 190,
       color: "#E5A5B4",
-      opacity: 0.2,
-      width: 1,
+      opacity: 0.4,
+      width: 1.8,
+      shadow: {
+        enable: true,
+        color: "#E5A5B4",
+        blur: 6
+      }
     },
     move: {
       enable: true,
-      speed: isMobile ? 1 : 1.5,
+      speed: isMobile ? 0.9 : 1.3,
       direction: "none",
-      random: false,
+      random: true,
       straight: false,
       out_mode: "out",
       bounce: false,
+      attract: {
+        enable: true,
+        rotateX: 650,
+        rotateY: 1300
+      }
     },
   },
   interactivity: {
     detect_on: "canvas",
     events: {
-      onhover: { enable: !isMobile, mode: "grab" },
-      onclick: { enable: true, mode: "push" },
+      onhover: { 
+        enable: !isMobile, 
+        mode: ["grab", "bubble"]
+      },
+      onclick: { 
+        enable: true, 
+        mode: "repulse"
+      },
       resize: true,
     },
     modes: {
       grab: {
-        distance: 140,
-        line_linked: { opacity: 0.5 },
+        distance: 220,
+        line_linked: { 
+          opacity: 0.85
+        },
       },
-      push: { particles_nb: 3 },
+      bubble: {
+        distance: 220,
+        size: 9,
+        duration: 2.5,
+        opacity: 0.9,
+        speed: 3
+      },
+      repulse: {
+        distance: 180,
+        duration: 0.5
+      },
+      push: { particles_nb: 4 },
     },
   },
   retina_detect: true,
 });
 
 // ========================================
-// DEPOIMENTOS ROTATIVOS (OTIMIZADO)
+// DEPOIMENTOS ROTATIVOS
 // ========================================
 const testimonials = [
   {
@@ -258,7 +296,6 @@ if (bookingForm) {
       mensagem ? `\n*Observações:* ${mensagem}` : ""
     }`;
 
-    // ⚠️ MUDE O NÚMERO DO WHATSAPP AQUI! ⚠️
     const whatsappLink = `https://wa.me/5511999999999?text=${encodeURIComponent(
       texto
     )}`;
@@ -280,7 +317,7 @@ if (bookingForm) {
 }
 
 // ========================================
-// SCROLL SUAVE PARA ÂNCORAS (OTIMIZADO)
+// SCROLL SUAVE PARA ÂNCORAS
 // ========================================
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
@@ -306,7 +343,7 @@ if (dataInput) {
 }
 
 // ========================================
-// PERFORMANCE: LAZY LOADING PARA IMAGENS
+// LAZY LOADING PARA IMAGENS
 // ========================================
 if ("IntersectionObserver" in window) {
   const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -327,7 +364,7 @@ if ("IntersectionObserver" in window) {
 }
 
 // ========================================
-// PREVENÇÃO DE SCROLL JANK
+// HARDWARE ACCELERATION
 // ========================================
 document.addEventListener("DOMContentLoaded", () => {
   if (!isMobile) {
