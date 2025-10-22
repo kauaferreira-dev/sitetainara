@@ -1,23 +1,21 @@
 // ========================================
-// INICIALIZAR AOS ULTRA SMOOTH 120FPS
+// INICIALIZAR AOS (Animações on Scroll) - OTIMIZADO
 // ========================================
 AOS.init({
-  duration: 600,
+  duration: 800,
   once: true,
-  offset: 50,
-  easing: "ease-out-quad",
+  offset: 100,
+  easing: "ease-out-cubic",
   disable: false,
   startEvent: "DOMContentLoaded",
   useClassNames: false,
   disableMutationObserver: false,
-  debounceDelay: 0,
-  throttleDelay: 16,
-  anchorPlacement: "top-bottom",
-  mirror: false,
+  debounceDelay: 50,
+  throttleDelay: 99,
 });
 
 // ========================================
-// OTIMIZADOR DE SCROLL 120FPS
+// OTIMIZADOR DE SCROLL GLOBAL (60-120FPS)
 // ========================================
 let ticking = false;
 let lastScrollY = 0;
@@ -31,8 +29,7 @@ window.addEventListener("resize", () => {
 function optimizedScroll() {
   const now = performance.now();
 
-  // 120FPS = 8.33ms por frame
-  if (now - lastScrollTime < 8.33) {
+  if (now - lastScrollTime < 16) {
     return;
   }
 
@@ -44,7 +41,6 @@ function optimizedScroll() {
   if (navbar) {
     if (lastScrollY > 50) {
       navbar.classList.add("scrolled");
-      navbar.style.transform = "translate3d(0, 0, 0)";
     } else {
       navbar.classList.remove("scrolled");
     }
@@ -54,9 +50,7 @@ function optimizedScroll() {
   if (!isMobile) {
     const heroBg = document.getElementById("heroBg");
     if (heroBg && lastScrollY < window.innerHeight) {
-      requestAnimationFrame(() => {
-        heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
-      });
+      heroBg.style.transform = `translate3d(0, ${lastScrollY * 0.5}px, 0)`;
     }
   }
 
@@ -85,7 +79,7 @@ window.addEventListener(
 );
 
 // ========================================
-// MENU MOBILE (HAMBÚRGUER)
+// MENU MOBILE (HAMBÚRGUER) - ADICIONA ISSO!
 // ========================================
 const menuToggle = document.querySelector(".menu-toggle");
 const navbarMenu = document.querySelector(".navbar-menu");
@@ -351,27 +345,25 @@ if (dataInput) {
 }
 
 // ========================================
-// FIX IMAGENS DA GALERIA (SEM LAZY LOADING)
+// LAZY LOADING PARA IMAGENS
 // ========================================
-document.addEventListener("DOMContentLoaded", () => {
-  // REMOVE lazy loading e força visibilidade
-  const fixGalleryImages = () => {
-    document.querySelectorAll(".gallery-item img").forEach((img) => {
-      img.style.opacity = "1";
-      img.style.visibility = "visible";
-      img.removeAttribute("loading"); // Remove lazy
+if ("IntersectionObserver" in window) {
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+        }
+        img.classList.remove("lazy");
+        observer.unobserve(img);
+      }
     });
-  };
+  });
 
-  // Executa imediatamente
-  fixGalleryImages();
-
-  // Executa depois de 100ms
-  setTimeout(fixGalleryImages, 100);
-
-  // Executa depois de 500ms (garantia)
-  setTimeout(fixGalleryImages, 500);
-});
+  const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+  lazyImages.forEach((img) => imageObserver.observe(img));
+}
 
 // ========================================
 // HARDWARE ACCELERATION
@@ -386,133 +378,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-// ========================================
-// PARTICLES.JS (MAIS FORTE - SÓ OS TRAÇOS)
-// ========================================
-particlesJS("particles-js", {
-  particles: {
-    number: {
-      value: isMobile ? 50 : 100, // MUITO MAIS partículas
-      density: { enable: true, value_area: 800 },
-    },
-    color: {
-      value: ["#E5A5B4", "#F2C6D3", "#C67B8F"], // SÓ ROSA
-    },
-    shape: {
-      type: "circle",
-      stroke: {
-        width: 0,
-        color: "#E5A5B4",
-      },
-    },
-    opacity: {
-      value: 0.6, // Mais visível
-      random: true,
-      anim: {
-        enable: true,
-        speed: 0.8,
-        opacity_min: 0.2,
-        sync: false,
-      },
-    },
-    size: {
-      value: 5, // Maior
-      random: true,
-      anim: {
-        enable: true,
-        speed: 3,
-        size_min: 2,
-        sync: false,
-      },
-    },
-    line_linked: {
-      enable: true,
-      distance: 150, // Linhas mais próximas
-      color: "#E5A5B4", // ROSA
-      opacity: 0.6, // Mais visível
-      width: 2.5, // LINHAS MAIS GROSSAS
-      shadow: {
-        enable: true,
-        color: "#E5A5B4",
-        blur: 10,
-      },
-    },
-    move: {
-      enable: true,
-      speed: isMobile ? 1.2 : 1.8, // Mais rápido
-      direction: "none",
-      random: true,
-      straight: false,
-      out_mode: "out",
-      bounce: false,
-      attract: {
-        enable: true,
-        rotateX: 800,
-        rotateY: 1500,
-      },
-    },
-  },
-  interactivity: {
-    detect_on: "canvas",
-    events: {
-      onhover: {
-        enable: !isMobile,
-        mode: ["grab", "bubble"],
-      },
-      onclick: {
-        enable: true,
-        mode: "push",
-      },
-      resize: true,
-    },
-    modes: {
-      grab: {
-        distance: 250, // Puxa mais longe
-        line_linked: {
-          opacity: 1, // Linha TOTAL visível
-        },
-      },
-      bubble: {
-        distance: 250,
-        size: 12, // BOLHA GRANDE
-        duration: 2,
-        opacity: 1,
-        speed: 3,
-      },
-      push: {
-        particles_nb: 6, // Adiciona mais partículas ao clicar
-      },
-    },
-  },
-  retina_detect: true,
-});
-
-// ========================================
-// RASTRO DO CURSOR - SÓ ROSA
-// ========================================
-const cursorTrail = [];
-const trailLength = isMobile ? 0 : 25;
-
-if (!isMobile) {
-  document.addEventListener("mousemove", (e) => {
-    const trail = document.createElement("div");
-    trail.className = "cursor-trail";
-    trail.style.left = e.clientX + "px";
-    trail.style.top = e.clientY + "px";
-    document.body.appendChild(trail);
-
-    cursorTrail.push(trail);
-    if (cursorTrail.length > trailLength) {
-      const oldTrail = cursorTrail.shift();
-      if (oldTrail && oldTrail.parentNode) {
-        oldTrail.remove();
-      }
-    }
-
-    setTimeout(() => {
-      if (trail && trail.parentNode) {
-        trail.remove();
-      }
-    }, 1000);
-  });
-}
